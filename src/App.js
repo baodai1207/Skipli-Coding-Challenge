@@ -1,30 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './index.css';
 
 export default function App() {
+  const [values, setValues] = useState({
+    phoneNumber: '',
+    accessCode: '',
+  });
+
+  const [submitted, setSubmitted] = useState(false);
+  const [valid, setValid] = useState(false);
+
+  const handlePhoneNumberInputChange = event => {
+    setValues({ ...values, phoneNumber: event.target.value });
+  };
+  const handleAccessCodeInputChange = event => {
+    setValues({ ...values, accessCode: event.target.value });
+  };
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    if (values.phoneNumber && values.accessCode) {
+      setValid(true);
+    }
+    setSubmitted(true);
+  };
   return (
     <div class='form-container'>
-      <form class='register-form'>
+      <form class='register-form' onSubmit={handleSubmit}>
         {/* Uncomment the next line to show the success message */}
-        {/* <div class='success-message'>Success! Thank you for registering</div> */}
+        {submitted && valid ? (
+          <div class='success-message'>Success! Thank you for registering</div>
+        ) : null}
         <input
+          onChange={handlePhoneNumberInputChange}
+          value={values.phoneNumber}
           id='phone-number'
           class='form-field'
-          type='text'
+          // type='text'
           placeholder='Phone Number'
           name='phoneNumber'
         />
-        {/* Uncomment the next line to show the error message */}
-        <span id='first-name-error'>Please enter a phone number</span>
+        {submitted && values.phoneNumber ? (
+          <span id='phone-number-error'>Please enter a phone number</span>
+        ) : null}
         <input
+          onChange={handleAccessCodeInputChange}
+          value={values.accessCode}
           id='access-code'
           class='form-field'
-          type='text'
+          // type='text'
           placeholder='Access Code'
           name='accessCode'
         />
-        {/* Uncomment the next line to show the error message */}
-        {/* <span id="email-error">Please enter an email address</span> */}
         <button class='form-field' type='submit'>
           Register
         </button>
