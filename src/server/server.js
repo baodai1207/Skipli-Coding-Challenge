@@ -1,14 +1,14 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
+const config = require('./confjg');
 const bodyParser = require('body-parser'); // middleware
+const customerRoutes = require('../routes/customerRoutes');
 
-const port = process.env.PORT || 5000;
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(cors());
+app.use(bodyParser.json());
 
+app.use('/api', customerRoutes.routes);
 // This displays message that the server running and listening to specified port
-app.listen(port, () => console.log(`Listening on port ${port}`));
-
-// create a GET route
-app.get('/express_backend', (req, res) => {
-  res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' });
-});
+app.listen(config.port, () => console.log(`Listening on port ${config.port}`));

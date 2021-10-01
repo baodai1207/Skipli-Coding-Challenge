@@ -1,6 +1,6 @@
-import React, { useState, Component } from 'react';
-
-// export default Form;
+import React, { useState } from 'react';
+import { Alert } from 'react-bootstrap';
+import './form.css';
 
 export default function Form() {
   const [values, setValues] = useState({
@@ -8,29 +8,31 @@ export default function Form() {
     accessCode: '',
   });
 
-  const [submitted, setSubmitted] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [valid, setValid] = useState(false);
 
-  const handlePhoneNumberInputChange = event => {
-    setValues({ ...values, phoneNumber: event.target.value });
-  };
-  const handleAccessCodeInputChange = event => {
-    setValues({ ...values, accessCode: event.target.value });
-  };
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = event => {
-    event.preventDefault();
-    if (values.phoneNumber && values.accessCode) {
-      setValid(true);
+  function handlePhoneNumberInputChange(e) {
+    setValues({ ...values, phoneNumber: e.target.value });
+  }
+  function handleAccessCodeInputChange(e) {
+    setValues({ ...values, accessCode: e.target.value });
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (values.phoneNumber == null) {
+      setError('Please enter a phone number!');
     }
-    setSubmitted(true);
-  };
+    // NEED TO CHECK ACCESS CODE IF IT IS THE SAME WITH GENERATED CODE
+    setLoading(false);
+  }
   return (
     <div class='form-container'>
+      {error && <Alert variant='danger'>{error}</Alert>}
       <form class='register-form' onSubmit={handleSubmit}>
-        {submitted && valid ? (
-          <div class='success-message'>Success! Thank you for registering</div>
-        ) : null}
         <input
           onChange={handlePhoneNumberInputChange}
           value={values.phoneNumber}
@@ -39,10 +41,8 @@ export default function Form() {
           // type='text'
           placeholder='Phone Number'
           name='phoneNumber'
+          required
         />
-        {submitted && values.phoneNumber ? (
-          <span id='phone-number-error'>Please enter a phone number</span>
-        ) : null}
         <input
           onChange={handleAccessCodeInputChange}
           value={values.accessCode}
@@ -52,7 +52,7 @@ export default function Form() {
           placeholder='Access Code'
           name='accessCode'
         />
-        <button class='form-field' type='submit'>
+        <button disabled={loading} class='form-field' type='submit'>
           Sign Up
         </button>
       </form>
