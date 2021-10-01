@@ -8,7 +8,7 @@ export default function Form() {
     accessCode: '',
   });
 
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [valid, setValid] = useState(false);
 
   const [submitted, setSubmitted] = useState(false);
@@ -23,15 +23,19 @@ export default function Form() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (values.phoneNumber == null) {
-      setError('Please enter a phone number!');
+    if (values.phoneNumber) {
+      // setError('Please enter a phone number!');
+      setValid(true);
     }
     // NEED TO CHECK ACCESS CODE IF IT IS THE SAME WITH GENERATED CODE
-    setLoading(false);
+    setSubmitted(true);
   }
   return (
     <div class='form-container'>
       {error && <Alert variant='danger'>{error}</Alert>}
+      {submitted && valid ? (
+        <div class='success-message'>Success! Thank you for registering</div>
+      ) : null}
       <form class='register-form' onSubmit={handleSubmit}>
         <input
           onChange={handlePhoneNumberInputChange}
@@ -43,6 +47,9 @@ export default function Form() {
           name='phoneNumber'
           required
         />
+        {submitted && values.phoneNumber ? (
+          <span id='phone-number-error'>Please enter a phone number</span>
+        ) : null}
         <input
           onChange={handleAccessCodeInputChange}
           value={values.accessCode}
